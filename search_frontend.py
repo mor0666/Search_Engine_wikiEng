@@ -94,7 +94,7 @@ def search_body():
     query_tokens = new_back_end_search.tokenize(query)
     result_can = new_back_end_search.cossim(query_tokens, app.idx_body, app.dict_DL)
     res_try = dict(result_can)
-    sorted_result = sorted(result_can.items(), key=lambda item: item[1], reverse=True)[:100]
+    sorted_result = sorted(result_try.items(), key=lambda item: item[1], reverse=True)[:100]
     for k, v in sorted_result:
         if (v != 0.0):
             res.append((k, app.dict_title[k]))
@@ -178,37 +178,37 @@ def get_pagerank():
     if len(wiki_ids) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-    # res = [page_rank_dict[i] for i in wiki_ids]
+    res = [app.page_rank_dict[i] for i in wiki_ids]
     # END SOLUTION
     return jsonify(res)
 
 
-# @app.route("/get_pageview", methods=['POST'])
-# def get_pageview():
-#     ''' Returns the number of page views that each of the provide wiki articles
-#         had in August 2021.
-#
-#         Test this by issuing a POST request to a URL like:
-#           http://YOUR_SERVER_DOMAIN/get_pageview
-#         with a json payload of the list of article ids. In python do:
-#           import requests
-#           requests.post('http://YOUR_SERVER_DOMAIN/get_pageview', json=[1,5,8])
-#         As before YOUR_SERVER_DOMAIN is something like XXXX-XX-XX-XX-XX.ngrok.io
-#         if you're using ngrok on Colab or your external IP on GCP.
-#     Returns:
-#     --------
-#         list of ints:
-#           list of page view numbers from August 2021 that correrspond to the
-#           provided list article IDs.
-#     '''
-#     res = []
-#     wiki_ids = request.get_json()
-#     if len(wiki_ids) == 0:
-#         return jsonify(res)
-#     # BEGIN SOLUTION
-#     res = list(page_view_data_frame.loc[wiki_ids, 'n_views'])
-#     # END SOLUTION
-#     return jsonify(res)
+@app.route("/get_pageview", methods=['POST'])
+def get_pageview():
+    ''' Returns the number of page views that each of the provide wiki articles
+        had in August 2021.
+
+        Test this by issuing a POST request to a URL like:
+          http://YOUR_SERVER_DOMAIN/get_pageview
+        with a json payload of the list of article ids. In python do:
+          import requests
+          requests.post('http://YOUR_SERVER_DOMAIN/get_pageview', json=[1,5,8])
+        As before YOUR_SERVER_DOMAIN is something like XXXX-XX-XX-XX-XX.ngrok.io
+        if you're using ngrok on Colab or your external IP on GCP.
+    Returns:
+    --------
+        list of ints:
+          list of page view numbers from August 2021 that correrspond to the
+          provided list article IDs.
+    '''
+    res = []
+    wiki_ids = request.get_json()
+    if len(wiki_ids) == 0:
+        return jsonify(res)
+    # BEGIN SOLUTION
+    res = list(app.page_view_data_frame.loc[wiki_ids, 'n_views'])
+    # END SOLUTION
+    return jsonify(res)
 
 
 if __name__ == '__main__':
